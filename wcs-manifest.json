@@ -1,10 +1,10 @@
 {
-  "title": "Hello-world",
-  "shortName": "hello-world-2",
-  "description": "Hello world simple webcomp example",
-  "descriptionAbstract": "Hello world simple webcomp example",
+  "title": "Webcams Visualization Opendatahub",
+  "shortName": "Webcams",
+  "description": "A simple map that shows webcams available from opendatahub",
+  "descriptionAbstract": "A simple map that shows webcams available from opendatahub",
   "license": "AGPL-3.0-or-later",
-  "repositoryUrl": "https://your-repository.git",
+  "repositoryUrl": "https://github.com/noi-techpark/webcomp-webcams",
   "copyrightHolders": [
     {
       "name": "NOI",
@@ -15,10 +15,10 @@
   ],
   "authors": [
     {
-      "name": "...",
-      "email": "...",
-      "organization": "...",
-      "organizationUrl": "..."
+      "name": "Rudi Thoeni",
+      "email": "r.thoeni@noi.bz.it",
+      "organization": "NOI S.p.A",
+      "organizationUrl": "https://noi.bz.it"
     }
   ],
   "image": "wcs-logo.png",
@@ -26,13 +26,13 @@
   "dist": {
     "basePath": "dist",
     "files": [
-      "webcomp-boilerplate.min.js"
+      "webcomp-webcams.min.js"
     ],
     "scripts": [
     ]
   },
   "configuration": {
-    "tagName": "hello-world",
+    "tagName": "webcomp-webcams",
     "options": [
       {
         "key": "title",
@@ -41,6 +41,20 @@
         "required": false,
         "options": {
           "default": "hello-world"
+        }
+      },
+      {
+        "key": "source",
+        "type": "multiselect",
+        "label": "Sources of the webcams",
+        "required": false,
+        "options": {
+          "values": [
+            "idm",
+            "lts",
+            "dss",
+            "panomax"
+          ]
         }
       }
     ]

@@ -8,7 +8,30 @@ module.exports = {
   mode: 'production',
   entry: './src/index.js',
   output: {
-    filename: 'webcomp-boilerplate.min.js',
+    filename: 'webcomp-webcams.min.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  module: {
+    rules: [
+      {
+        test: /\.(s*)css$/,
+        use: [{ loader: 'css-loader' }, { loader: 'sass-loader' }]
+      },
+      {
+        test: /\.(png|jpg|gif|ttf)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000
+            }
+          }
+        ]
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
+      }
+    ]
+  }
 };
