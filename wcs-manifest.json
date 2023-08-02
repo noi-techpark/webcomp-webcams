@@ -4,7 +4,7 @@
   "description": "A simple map that shows webcams available from opendatahub",
   "descriptionAbstract": "A simple map that shows webcams available from opendatahub",
   "license": "AGPL-3.0-or-later",
-  "repositoryUrl": "https://github.com/noi-techpark/webcomp-webcams",
+  "repositoryUrl": "https://github.com/noi-techpark/webcomp-webcams.git",
   "copyrightHolders": [
     {
       "name": "NOI",
