@@ -1,5 +1,53 @@
 #map 
 { 
-    height: 250px; 
-    width: 250px; 
+    height: 800px; 
+    width: 1200px; 
 }
+
+.marker_cluster__marker {
+    background-color: green;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .marker {
+    background-color: white;
+    border-radius: 10%;
+    display: flex;
+    align-items: center;
+    width: 128px;
+    height: 100px;
+  }
+  
+  .marker :first-child {
+    border-radius: 10%;
+    margin: auto;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;    
+    height: 100px;   
+  }
+  
+  /* TODO: until icon */
+  .leaflet-div-icon {
+    background-color: transparent;
+    border: 0;
+  }
+
+  .webcampopup {
+    width: 500px;
+  }
+
+  .webcampopup img {
+    width: 100%;
+    height: auto;
+  }
+

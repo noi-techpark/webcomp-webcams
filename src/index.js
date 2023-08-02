@@ -66,7 +66,7 @@ class OpendatahubWebcams extends HTMLElement {
     connectedCallback() {
         this.render();
         this.initializeMap();
-        this.callApi();
+        this.callApiDrawMap();
     }
 
     async initializeMap() {
@@ -84,11 +84,87 @@ class OpendatahubWebcams extends HTMLElement {
 
     //Api call
     async callApi(){
-        await this.fetchWebcams('');
-
+       
         console.log('api gibbmer');
         console.log(this.webcams);
     }
+
+    async callApiDrawMap() {
+        await this.fetchWebcams('');
+        let columns_layer_array = [];
+    
+        this.webcams.map(webcam => {
+              
+            if(webcam.GpsPoints.position && webcam.GpsPoints.position.Latitude.Latitude != 0 && webcam.GpsPoints.position.Longitude != 0)
+            {
+                console.log(webcam.Shortname);
+                console.log(webcam.GpsPoints.position);
+
+                const pos = [
+                    webcam.GpsPoints.position.Latitude, 
+                    webcam.GpsPoints.position.Longitude
+                ];
+                    
+                const webcamhtml = '<img src="' + webcam.Webcamurl + '" title="' + webcam.Shortname + '">'
+
+                let icon = L.divIcon({
+                    html: '<div class="marker"><div style="background-color: green">' + webcamhtml + '</div></div>',
+                    iconSize: L.point(25, 25)
+                });
+            
+                //   let popupCont = '<div class="popup"><b>' + webcam.Shortname + '</b><br /><i>' + webcam.Id + '</i>';
+                //   popupCont += '<table>';
+                //   Object.keys(station.smetadata).forEach(key => {
+                //     let value = station.smetadata[key];
+                //     if (value) {
+                //       popupCont += '<tr>';
+                //       popupCont += '<td>' + key + '</td>';
+                //       if (value instanceof Object) {
+                //         let act_value = value[this.language];
+                //         if (typeof act_value === 'undefined') {
+                //           act_value = value[this.language_default];
+                //         } 
+                //         if (typeof act_value === 'undefined') {
+                //           act_value = '<pre style="background-color: lightgray">' + JSON.stringify(value, null, 2) + '</pre>';
+                //         } 
+                //         popupCont += '<td><div class="popupdiv">' + act_value + '</div></td>';
+                //       } else {
+                //         popupCont += '<td>' + value + '</td>';
+                //       } 
+                //       popupCont += '</tr>';
+                //     }
+                //   });
+                //   popupCont += '</table></div>';
+            
+                let popup = L.popup().setContent('<div>' + webcam.Shortname + '</div><br /><div class="webcampopup">' + webcamhtml + '</div>');
+            
+                let marker = L.marker(pos, {
+                    icon: icon,
+                }).bindPopup(popup, { maxWidth : 560 });
+            
+                columns_layer_array.push(marker);
+            }
+        });
+    
+        this.visibleStations = columns_layer_array.length;
+        let columns_layer = L.layerGroup(columns_layer_array, {});
+    
+        /** Prepare the cluster group for station markers */
+        this.layer_columns = new L.MarkerClusterGroup({
+          showCoverageOnHover: false,
+          chunkedLoading: true,
+          iconCreateFunction: function(cluster) {
+            return L.divIcon({
+              html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
+              iconSize: L.point(36, 36)
+            });
+          }
+        });
+        /** Add maker layer in the cluster group */
+        this.layer_columns.addLayer(columns_layer);
+        /** Add the cluster group to the map */
+        this.map.addLayer(this.layer_columns);
+      }
 
 
     render() {
