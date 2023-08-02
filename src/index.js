@@ -2,27 +2,33 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import L from 'leaflet';
+import L, { latLng } from 'leaflet';
 import leaflet_mrkcls from 'leaflet.markercluster';
 import style__leaflet from 'leaflet/dist/leaflet.css';
 import style__markercluster from 'leaflet.markercluster/dist/MarkerCluster.css';
-import style from './css/main.css';
-import { fetchWebcams } from './api/api.js';
+import style from './scss/main.scss';
+import style__autocomplete from './scss/autocomplete.css';
+import { fetchWebcams, fetchDistricts } from './api/api.js';
+import { autocomplete } from './custom/autocomplete.js'
 
-delete L.Icon.Default.prototype._getIconUrl;
+//delete L.Icon.Default.prototype._getIconUrl;
 
 class OpendatahubWebcams extends HTMLElement {
     constructor() {
-        super();
+        super();         
 
+        var centerlatlong = this.centermap.split(',')
          /* Map configuration */
-        this.map_center = [46.479, 11.331];
-        this.map_zoom = 9;
-        this.map_layer = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
+        this.map_center = [centerlatlong[0], centerlatlong[1]];
+        this.map_zoom = this.zoommap;
+        //this.map_layer = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
+        this.map_layer = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";        
         this.map_attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>';
 
         /* Requests */
         this.fetchWebcams = fetchWebcams.bind(this);
+        this.fetchDistricts = fetchDistricts.bind(this);
+        this.autocomplete = autocomplete.bind(this);
 
         // We need an encapsulation of our component to not
         // interfer with the host, nor be vulnerable to outside
@@ -37,14 +43,14 @@ class OpendatahubWebcams extends HTMLElement {
     // Static, because all OpendatahubWebcams instances have the same
     //   observed attribute names
     static get observedAttributes() {
-        return ['title'];
+        return ['centermap','zoom','source'];
     }
 
     // Override from HTMLElement
     // Do not use setters here, because you might end up with an endless loop
     attributeChangedCallback(propName, oldValue, newValue) {
         console.log(`Changing "${propName}" from "${oldValue}" to "${newValue}"`);
-        if (propName === "title") {
+        if (propName === "centermap" || propName === "zoommap" || propName === "source") {
             this.render();
         }
     }
@@ -53,20 +59,35 @@ class OpendatahubWebcams extends HTMLElement {
     // internal variables for that to avoid the risk of an
     // endless loop and to have attributes in the html tag and
     // Javascript properties always in-sync.
-    get title() {
-        return this.getAttribute("title");
+    get centermap() {
+        return this.getAttribute("centermap");
+    }
+    set centermap(newCentermap) {
+        this.setAttribute("centermap", newTitle)
     }
 
-    set title(newTitle) {
-        this.setAttribute("title", newTitle)
+    get zoommap() {
+        return this.getAttribute("zoommap");
+    }
+    set zoommap(newZoommap) {
+        this.setAttribute("zoommap", newZoommap)
+    }
+
+    get source() {
+        return this.getAttribute("source");
+    }
+    set source(newSource) {
+        this.setAttribute("source", newSource)
     }
 
     // Triggers when the element is added to the document *and*
     // becomes part of the page itself (not just a child of a detached DOM)
     connectedCallback() {
         this.render();
+
         this.initializeMap();
         this.callApiDrawMap();
+        this.addSearchInput();
     }
 
     async initializeMap() {
@@ -83,23 +104,55 @@ class OpendatahubWebcams extends HTMLElement {
     }
 
     //Api call
-    async callApi(){
+    async addSearchInput(){
        
-        console.log('api gibbmer');
-        console.log(this.webcams);
-    }
+        let root = this.shadowRoot;
+        let searchref = root.getElementById('searchInput');
+        let hiddenref = root.getElementById('searchHidden');
+          
+        await this.fetchDistricts('Detail.de.Title,GpsPoints.position');    
+        const mydistricts = this.districts;
+        const mymap = this.map;
+
+        this.autocomplete(searchref, hiddenref, mydistricts, this.shadowRoot);
+       
+        // searchref.addEventListener("click", (event) => {
+        //     console.log(searchref.value);
+        // });
+
+        hiddenref.addEventListener("change", function(event) {
+           
+                let result = mydistricts.find(o => o['Detail.de.Title'] === searchref.value);
+
+                //console.log(result);
+
+                //console.log(result["GpsPoints.position"].Latitude);
+
+                //center the map and zoom
+                if(result){                    
+                    const newgps = [result["GpsPoints.position"].Latitude, result["GpsPoints.position"].Longitude];
+                    
+                    let markericon = L.icon({
+                        iconUrl: 'map_marker.png',
+                        iconSize: L.point(22, 40)
+                    });                    
+
+                    var newMarker = new L.marker(newgps, { icon: markericon }).addTo(mymap);
+
+                    mymap.flyTo(newgps, 13);
+
+                }            
+        });
+    }    
 
     async callApiDrawMap() {
-        await this.fetchWebcams('');
+        await this.fetchWebcams(this.source);
         let columns_layer_array = [];
     
         this.webcams.map(webcam => {
               
             if(webcam.GpsPoints.position && webcam.GpsPoints.position.Latitude.Latitude != 0 && webcam.GpsPoints.position.Longitude != 0)
             {
-                console.log(webcam.Shortname);
-                console.log(webcam.GpsPoints.position);
-
                 const pos = [
                     webcam.GpsPoints.position.Latitude, 
                     webcam.GpsPoints.position.Longitude
@@ -108,8 +161,8 @@ class OpendatahubWebcams extends HTMLElement {
                 const webcamhtml = '<img src="' + webcam.Webcamurl + '" title="' + webcam.Shortname + '">'
 
                 let icon = L.divIcon({
-                    html: '<div class="marker"><div style="background-color: green">' + webcamhtml + '</div></div>',
-                    iconSize: L.point(25, 25)
+                    html: '<div class="marker">' + webcamhtml + '</div>',
+                    iconSize: L.point(100, 100)
                 });
             
                 //   let popupCont = '<div class="popup"><b>' + webcam.Shortname + '</b><br /><i>' + webcam.Id + '</i>';
@@ -156,7 +209,7 @@ class OpendatahubWebcams extends HTMLElement {
           iconCreateFunction: function(cluster) {
             return L.divIcon({
               html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
-              iconSize: L.point(36, 36)
+              iconSize: L.point(100, 100)
             });
           }
         });
@@ -172,15 +225,17 @@ class OpendatahubWebcams extends HTMLElement {
             <style>
                 ${style__markercluster}
                 ${style__leaflet}
+                ${style__autocomplete}
                 ${style}
-            </style>
-            <h1>
-                ${this.title}
-            </h1>
-            <div id="map" class="map"></div>
+            </style>     
+            <div id="webcomponents-map"> 
+                <div class="autocomplete" style="width:300px;"><input id="searchInput" type="text" name="myCountry" placeholder="Country"></div>
+                <input id="searchHidden" type="hidden">     
+                <div id="map" class="map"></div>
+            </div>
         `;
     }
 }
 
-// Register our first Custom Element named <hello-world>
+// Register our first Custom Element named <webcomp-webcams>
 customElements.define('webcomp-webcams', OpendatahubWebcams);

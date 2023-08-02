@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'production',
@@ -33,5 +34,12 @@ module.exports = {
         loader: 'svg-inline-loader'
       }
     ]
-  }
+  },
+  plugins: [
+    new CopyPlugin({
+        patterns: [
+          { from: "./src/assets", to: "." }
+        ],
+    })
+  ],
 };

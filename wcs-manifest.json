@@ -35,12 +35,21 @@
     "tagName": "webcomp-webcams",
     "options": [
       {
-        "key": "title",
+        "key": "centermap",
         "type": "text",
-        "label": "title of the web-comp",
+        "label": "latitude and longitude: ex. 46.7728692,10.7916716",
         "required": false,
         "options": {
-          "default": "hello-world"
+          "default": ""
+        }
+      },
+      {
+        "key": "zoommap",
+        "type": "int",
+        "label": "Zoom level of the map example 10",
+        "required": false,
+        "options": {
+          "default": 10
         }
       },
       {

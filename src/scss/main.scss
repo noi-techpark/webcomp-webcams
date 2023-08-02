@@ -1,0 +1,175 @@
+/*
+ * SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
+ @import 'mixins';
+ @import 'colors';
+ 
+ $map_desktop_height: 700px;
+ $mobile-bottom-controls: 24px;
+
+ @mixin dimension() {
+  height: $map_desktop_height;
+  width: 100%;
+}
+
+ .webcomponents-map {
+  @media only screen and (min-width: 320px) {
+    @include map_dimensions_tns();
+    font-family: 'Suedtirol';
+    color: $black;
+    background-color: $black-50;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+
+    .controls_container {
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      right: 24px;
+      bottom: $mobile-bottom-controls;
+    }
+    .logo_container {
+      bottom: $mobile-bottom-controls;
+      left: 24px;
+    }
+
+    &.closed {
+      @include map_dimensions_tns();
+      position: relative;
+      height: 30vh;
+      width: 90%;
+      margin: 0 auto;
+
+      .controls_container {
+        bottom: 24px;
+      }
+      .logo_container {
+        bottom: 24px;
+      }
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    @include dimension();
+    position: relative;
+    height: $map_desktop_height;
+
+    &.closed {
+      @include dimension();
+      position: relative;
+      margin: auto;
+    }
+
+    .controls_container {
+      bottom: 24px;
+    }
+    .logo_container {
+      bottom: 24px;
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    @include dimension();
+    &.closed {
+      @include dimension();
+      width: 100%;
+      margin: auto;
+    }
+  }
+
+  // Apple specific code
+  .controls_container,
+  .logo_container {
+    @include apple-device-mq($iPhone8) {
+      bottom: 78px;
+    }
+    @include apple-device-mq() {
+      bottom: 144px;
+    }
+  }
+}
+
+#map {
+    @media only screen and (min-width: 320px) {
+      height: 100vh;
+      width: 100%;
+      &.closed {
+        height: 30vh;
+      }
+    }
+    @media only screen and (min-width: 678px) {
+      &.closed {
+        height: 30vh;
+      }
+    }
+    @media only screen and (min-width: 992px) {
+      height: $map_desktop_height;
+      width: 100%;
+      &.closed {
+        height: $map_desktop_height;
+      }
+    }
+  }
+
+.marker_cluster__marker {
+    background-color: green;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .marker {
+    background-color: white;
+    border-radius: 10%;
+    display: flex;
+    align-items: center;
+    width: 128px;
+    height: 100px;
+  }
+  
+  .marker :first-child {
+    border-radius: 10%;
+    margin: auto;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;    
+    height: 100px;   
+  }
+  
+  /* TODO: until icon */
+  .leaflet-div-icon {
+    background-color: transparent;
+    border: 0;
+  }
+
+  .webcampopup {
+    width: 500px;
+  }
+
+  .webcampopup img {
+    width: 100%;
+    height: auto;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    flex-grow: 1;
+  }

@@ -6,16 +6,16 @@ import axios from "axios";
 import config from "./config";
 
 export function callGet(path, params) {
-	console.log("call = " + config.API_BASE_URL + path);
-	console.log("call params = ");
-	console.log(params);
+	// console.log("call = " + config.API_BASE_URL + path);
+	// console.log("call params = ");
+	// console.log(params);
 	return axios
 		.get(config.API_BASE_URL + path, {
 			params: params
 		})
 		.then(function(response) {
-			console.log("call response = ");
-			console.log(response.data);
+			// console.log("call response = ");
+			// console.log(response.data);
 			//console.log(response.config);
 			return response.data;
 		})
@@ -26,7 +26,6 @@ export function callGet(path, params) {
 }
 
 export async function fetchWebcams(source) {
-	console.log(source)
 	return callGet("/WebcamInfo", {
             pagesize: 500,
 		    source: source,
@@ -39,4 +38,18 @@ export async function fetchWebcams(source) {
 			console.log(e)
 			throw e;
 		});
+}
+
+export async function fetchDistricts(fields) {
+    return callGet("/District", {
+        origin: config.ORIGIN,
+        fields: fields
+    })
+    .then(response => {
+        this.districts = response;
+    })
+    .catch(e => {
+        console.log(e)
+        throw e;
+    });
 }

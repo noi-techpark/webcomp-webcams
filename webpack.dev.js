@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 const path = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: 'development',
@@ -34,10 +35,17 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new CopyPlugin({
+        patterns: [
+          { from: "./src/assets", to: "." }
+        ],
+    })
+  ],
   devServer: {
     static: './public',
     port: 8998,
     hot: true
   },
-  devtool: 'inline-source-map',
+  devtool: 'inline-source-map'
 };
