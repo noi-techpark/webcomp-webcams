@@ -17,10 +17,19 @@ class OpendatahubWebcams extends HTMLElement {
     constructor() {
         super();         
 
-        var centerlatlong = this.centermap.split(',')
-         /* Map configuration */
-        this.map_center = [centerlatlong[0], centerlatlong[1]];
-        this.map_zoom = this.zoommap;
+        this.map_center = [46.7728692,10.7916716];
+        this.map_zoom = 10;
+
+        if(this.centermap != null)
+        {
+            var centerlatlong = this.centermap.split(',')
+            /* Map configuration */
+            this.map_center = [centerlatlong[0], centerlatlong[1]];
+        }
+        if(this.map_zoom != null)
+        {
+            this.map_zoom = this.zoommap;
+        }
         //this.map_layer = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
         this.map_layer = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";        
         this.map_attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>';
