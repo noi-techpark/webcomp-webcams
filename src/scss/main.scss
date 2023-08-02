@@ -140,6 +140,13 @@
     width: 128px;
     height: 100px;
   }
+
+  .marker-pointer {
+    display: flex;
+    align-items: center;
+    width: 22px;
+    height: 40px;
+  }
   
   .marker :first-child {
     border-radius: 10%;
@@ -172,4 +179,13 @@
     padding: 10px;
     border: none;
     flex-grow: 1;
+  }
+
+  .iconMarkerMap{
+    background-image:
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAkCAYAAACNBsqdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAASSSURBVEhLrZV/TFtVFMcPr1Bow1oKOFrmugUz5wwy3A9DIv6hgE4HOpYA6vAPEn/9Z/zHH4mJxkQXM39lujjFZGZScDAEJsVizCLaOUCBgg5cYIy2QPlRWqjQvrav73nu6x3QtYUCfpLbe879cd733nd6XhxEoXDvea3XCaWydObIHVpptlwpyQQBwO0K2OwW34DHyRu2ZTIt+p5KM90SQljgiqI61ZyFe31Xtvz5vIfVafsPZIJaowCFSgYgCLAw74XpqQUw/TkJxvbJ+Yl/2LOpu+NPNvz8jIuGEAkJXJqvy+G8ceePntDuf7IsGzSZSjoTmXGrEwyXhqDlG3Nvggyqmn57doBOrVCaX5tzPL/O1t56TQgEhJjheUEw4B6ylwij4YKUFdQpSw7V9rW3DtLlG4fsLTlc219WUJtKYjLkx2Hm3nqqandu0RP7iLspih7fB8XP7cqZH+ffJL6k+JAuS52VVP3Sqw8kKpRJ4qLNEIdva4dWCb291nvT40rqGZctcCz/0UzFjp0pdMnmIdmT94gmhXUIxxm5SnIk96CGTm2dnPs1IEtlHmPSdkrvy9CEp5V7yQc3b9jB5+VI+oLV7IQ5+5I453S4wTLmAMwI0V+NGmOl4x+KkSUzGYqURDochPPzcO5sN1Q9ZICf2oZgoNcKLx8zwKl3OmDCOg+fvPcrvFhsgO6rY3THCiSWbJtEzaAaXuDpKIUocdg94LBxsPivF9xuP9hNfnDMoI0nsU+z4LjGwRLO3Y6Ae7EF4OmiCzdHR2ZpNq4wPeUSOo2jgmvBI/h8nNDTZRZurSN9T9eYwHr8or+a0RG7gDHNUHh3TZPxl2E6vHWMHcNC4Z6a7xn/Iq/v7Z6kB9ka5Bp6rk4Ax/J6Rradaem8PG3F49HpzXNjeBYr3rRNqZX8wBhMlbNz474zDd8OgJfl6JKN48W0bK7/GxZm/J+3XDkxI9aKjCzp18a2GXPjdybAyiYu3AhkT2OdCTouTU2q75JWkzEJ+em/3uA5nFsu7zPaC3gJC3vu2Q4JCeLUurjdPmjQ9UHDVyOgSI//uKa1oo2ML+/O2Vs2IpVJKk1X7MljlhlQpSZCSqoc4uPFQ4Xh9wXg+uAUVJ/uhsvNE5CcFm/Dz8YLfw1fXCTzIV+QyqP1H2D3GrvEA+cTIPdBFRzI08CdWhWo0mTiYsecB8YtTujrmoKBTicwKC1RLj787Rp9+bvEINweWItdD7Z08uH0sjywi7xYEhlJcCmP90lqR1IyA9IkRpxD7Dh6UKevsIgeEhKYgMFPYvdG0IuZ06j2FWqLRLrAL7E5g2ZMuPAAn1F7mbDA+GRSsuqCXkyc0+nLR6i9TORXDnAGW7D4rs1CJLWEiIFR9SB2uqC3JvWo9ga1Q4immPApNjEno+DFTPiC2mFEDYyqh7BrDHoRQbUVfdQOYy3FBHLXkSoTi2o/onZE1gyMqv/ArjnohXAR1fZTOyLrKSZ8iG21alL/ot7tLdYNjKq7sGsKeiI/Yib8Tu2oxKKYlI3lXEX7FDX/H7CGdGAzUHddYlJMeR8bue8YAPgPCj26SovooecAAAAASUVORK5CYII=');
+    box-sizing: border-box;
+    width: 22px; 
+    height: 36px;
+    z-index: 3000;
   }

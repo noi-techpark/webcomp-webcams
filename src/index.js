@@ -132,11 +132,17 @@ class OpendatahubWebcams extends HTMLElement {
                 if(result){                    
                     const newgps = [result["GpsPoints.position"].Latitude, result["GpsPoints.position"].Longitude];
                     
-                    let markericon = L.icon({
-                        iconUrl: 'map_marker.png',
+                    // let markericon = L.icon({
+                    //     iconUrl: 'map_marker.png',
+                    //     iconSize: L.point(22, 40)
+                    // });            
+                    
+                    let markericon = L.divIcon({
+                        html: '<div class="marker-pointer"><span class="iconMarkerMap"></span></div>',                        
                         iconSize: L.point(22, 40)
-                    });                    
+                      });
 
+                    //var newMarker = new L.marker(newgps, { icon: markericon }).addTo(mymap);
                     var newMarker = new L.marker(newgps, { icon: markericon }).addTo(mymap);
 
                     mymap.flyTo(newgps, 13);
