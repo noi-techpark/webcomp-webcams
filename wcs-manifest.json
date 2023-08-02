@@ -45,11 +45,11 @@
       },
       {
         "key": "zoommap",
-        "type": "int",
+        "type": "text",
         "label": "Zoom level of the map example 10",
         "required": false,
         "options": {
-          "default": 10
+          "default": ""
         }
       },
       {
