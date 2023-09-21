@@ -27,7 +27,7 @@ export function callGet(path, params) {
 
 export async function fetchWebcams(source) {
 	return callGet("/WebcamInfo", {
-            pagesize: 500,
+            pagesize: 0,
 		    source: source != null ? source.toString() : '',
 			origin: config.ORIGIN
 		})

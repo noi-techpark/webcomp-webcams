@@ -173,10 +173,22 @@ class OpendatahubWebcams extends HTMLElement {
                     webcam.GpsPoints.position.Longitude
                 ];
                     
-                const webcamhtml = '<img src="' + webcam.Webcamurl + '" title="' + webcam.Shortname + '">'
+                var webcamname = webcam.Shortname;
+
+                if(webcamname == null)
+                    webcamname = "no name";
+
+                var imageurl = 'https://databrowser.opendatahub.com/img/noimage.png';
+
+                if(webcam.ImageGallery && webcam.ImageGallery[0])
+                    imageurl = webcam.ImageGallery[0].ImageUrl;
+
+
+                const webcamhtml = '<img src="' + imageurl + '" title="' + webcamname + '">'
 
                 let icon = L.divIcon({
-                    html: '<div class="marker">' + webcamhtml + '</div>',
+                    //html: '<div class="marker">' + webcamhtml + '</div>',
+                    html: '<div class="iconMarkerWebcam"></div>',
                     iconSize: L.point(100, 100)
                 });
             
@@ -203,8 +215,16 @@ class OpendatahubWebcams extends HTMLElement {
                 //     }
                 //   });
                 //   popupCont += '</table></div>';
+
+                var webcamurl = 'webcamurl';
+
+                if(webcam.WebCamProperties.WebcamUrl)
+                    webcamurl = webcam.WebCamProperties.WebcamUrl;
             
-                let popup = L.popup().setContent('<div>' + webcam.Shortname + '</div><br /><div class="webcampopup">' + webcamhtml + '</div>');
+                const popupheader = '<div><h2>Details</h2></div><div>' + webcamname + '</div><br /><div>Provider: ' + webcam.Source + '</div><br />'
+                const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div>'
+
+                let popup = L.popup().setContent(popupheader + popupbody);
             
                 let marker = L.marker(pos, {
                     icon: icon,
