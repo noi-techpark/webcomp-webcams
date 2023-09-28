@@ -221,7 +221,7 @@ class OpendatahubWebcams extends HTMLElement {
                 if(webcam.WebCamProperties.WebcamUrl)
                     webcamurl = webcam.WebCamProperties.WebcamUrl;
             
-                const popupheader = '<div><h2>Details</h2></div><div>' + webcamname + '</div><br /><div>Provider: ' + webcam.Source + '</div><br />'
+                const popupheader = '<div><h2>Details</h2></div><div>' + webcamname + '</div><br /><div>Provider: <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a></div><br />'
                 const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div>'
 
                 let popup = L.popup().setContent(popupheader + popupbody);
@@ -252,6 +252,12 @@ class OpendatahubWebcams extends HTMLElement {
         this.layer_columns.addLayer(columns_layer);
         /** Add the cluster group to the map */
         this.map.addLayer(this.layer_columns);
+
+        // this.map.on('popupopen', function(e) {
+        //     var px = map.project(e.target._popup._latlng); // find the pixel location on the map where the popup anchor is
+        //     px.y -= e.target._popup._container.clientHeight/2; // find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+        //     map.panTo(map.unproject(px),{animate: true}); // pan to new center
+        // });
       }
 
 
