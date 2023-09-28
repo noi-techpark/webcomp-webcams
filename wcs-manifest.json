@@ -62,7 +62,9 @@
             "idm",
             "lts",
             "dss",
-            "panomax"
+            "panomax",
+            "panocloud",
+            "feratel"
           ]
         }
       }
