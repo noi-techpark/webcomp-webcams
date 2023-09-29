@@ -221,8 +221,9 @@ class OpendatahubWebcams extends HTMLElement {
                 if(webcam.WebCamProperties.WebcamUrl)
                     webcamurl = webcam.WebCamProperties.WebcamUrl;
             
-                const popupheader = '<div><h2>Details</h2></div><div>' + webcamname + '</div><br /><div>Provider: <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a></div><br />'
-                const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div>'
+                const popupheader = '<div><h2>Details</h2></div><br /><a href="' + webcamurl + '" target="_blank">' + webcamname + '</a><br />'
+                const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div>' +
+                '<br /><div>Provider: <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a></div>'
 
                 let popup = L.popup().setContent(popupheader + popupbody);
             
