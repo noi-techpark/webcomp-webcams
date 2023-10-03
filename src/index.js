@@ -184,7 +184,7 @@ class OpendatahubWebcams extends HTMLElement {
                     imageurl = webcam.ImageGallery[0].ImageUrl;
 
 
-                const webcamhtml = '<img src="' + imageurl + '" title="' + webcamname + '">'
+                const webcamhtml = '<img class="webcampreview" src="' + imageurl + '" title="' + webcamname + '">'
 
                 let icon = L.divIcon({
                     //html: '<div class="marker">' + webcamhtml + '</div>',
@@ -221,15 +221,24 @@ class OpendatahubWebcams extends HTMLElement {
                 if(webcam.WebCamProperties.WebcamUrl)
                     webcamurl = webcam.WebCamProperties.WebcamUrl;
             
-                const popupheader = '<div><h2>Details</h2></div><br /><a href="' + webcamurl + '" target="_blank">' + webcamname + '</a><br />'
-                const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div>' +
-                '<br /><div>Provider: <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a></div>'
+                const popuplink = '<a href="' + webcamurl + '" target="_blank">' + webcamname + '</a><br />'
+                const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div><div class="webcampopuptext"><h3>' + popuplink +
+                '</h3><div><b>Provider:</b> <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a><br /><b>Source:</b> ' + webcam._Meta.Source + '<br /><br /></div></div>'
 
-                let popup = L.popup().setContent(popupheader + popupbody);
+                let popup = L.popup().setContent(popupbody);
             
+                // specify popup options 
+                var customOptions =
+                    {
+                    'minWidth': '350',
+                    'maxWidth': '450',
+                    'border-radius': '0.75em',
+                    'padding': '0px'
+                    }
+
                 let marker = L.marker(pos, {
                     icon: icon,
-                }).bindPopup(popup, { maxWidth : 560 });
+                }).bindPopup(popup, customOptions);
             
                 columns_layer_array.push(marker);
             }
