@@ -1,8 +1,8 @@
 {
-  "title": "Webcams Visualization Opendatahub",
+  "title": "Webcams Visualization",
   "shortName": "Webcams",
-  "description": "A simple map that shows webcams available from opendatahub",
-  "descriptionAbstract": "A simple map that shows webcams available from opendatahub",
+  "description": "A simple map that shows webcams available from Open Data Hub",
+  "descriptionAbstract": "A simple map that shows webcams available from Open Data Hub",
   "license": "AGPL-3.0-or-later",
   "repositoryUrl": "https://github.com/noi-techpark/webcomp-webcams.git",
   "copyrightHolders": [
