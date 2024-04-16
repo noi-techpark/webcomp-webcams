@@ -32,7 +32,7 @@ class OpendatahubWebcams extends HTMLElement {
         }
         //this.map_layer = "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png";
         this.map_layer = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";        
-        this.map_attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>';
+        this.map_attribution = '<a target="_blank" href="https://opendatahub.com">OpenDataHub.com</a> | &copy; <a target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a target="_blank" href="https://carto.com/attribution">CARTO</a>';
 
         /* Requests */
         this.fetchWebcams = fetchWebcams.bind(this);

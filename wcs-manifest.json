@@ -22,7 +22,9 @@
     }
   ],
   "image": "wcs-logo.png",
-  "searchTags": [],
+  "searchTags": [
+    "map"
+  ],
   "dist": {
     "basePath": "dist",
     "files": [
