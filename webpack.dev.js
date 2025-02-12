@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 const path = require('path');
+var Dotenv = require('dotenv-webpack');
 //const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
@@ -46,6 +47,9 @@ module.exports = {
     static: './public',
     port: 8998,
     hot: true
-  },
-  devtool: 'inline-source-map'
+  },    
+  devtool: 'inline-source-map',
+  plugins: [
+    new Dotenv()
+  ]
 };
