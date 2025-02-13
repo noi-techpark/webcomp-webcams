@@ -47,24 +47,22 @@ Include the webcomponent script file `dist/webcomp-webcams.min.js` in your HTML 
 
 ### Attributes
 
-#### TODO centermap
+#### centermap
 
-The description of the parameter xxx.
+Center map on latitude and longitude: ex. "46.7728692,10.7916716."  
+Type: string  
+Default: "46.7728692,10.7916716"
 
-Type: string
-Options: "test", "123"
+#### zoommap
 
-#### TODO zoom
-
-The description of the parameter yyy.
-
+Zoom level of the map example: 10
 Type: int
+Default: 10
 
 #### TODO source
 
-The description of the parameter yyy.
-
-Type: int
+Sources of the webcams. Filter webcams based on a source. Multiselect, available values: "idm","lts","dss","panomax","panocloud","feratel","a22"
+Type: multiselect
 
 ## Getting started
 
@@ -101,6 +99,10 @@ Download all dependencies:
 ```bash
 npm install
 ```
+
+### Environment
+
+Copy .env.example to .env and set all needed Environment Variables.
 
 ### Build
 
