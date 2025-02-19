@@ -216,13 +216,14 @@ class OpendatahubWebcams extends HTMLElement {
                 //   });
                 //   popupCont += '</table></div>';
 
-                var webcamurl = 'webcamurl';
+                var webcamurl = '';
 
                 if(webcam.WebCamProperties.WebcamUrl)
                     webcamurl = webcam.WebCamProperties.WebcamUrl;
             
-                const popuplink = '<a href="' + webcamurl + '" target="_blank">' + webcamname + '</a><br />'
-                const popupbody = '<div class="webcampopup"><a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a></div><div class="webcampopuptext"><h3>' + popuplink +
+                const popuplink = webcamurl != '' ? '<a href="' + webcamurl + '" target="_blank">' + webcamname + '</a><br />' : '<div>' + webcamname + '<div>';
+                const popupimage = webcamurl != '' ? '<a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a>' : '<div>' + webcamhtml + '<div>';
+                const popupbody = '<div class="webcampopup">' + popupimage + '</div><div class="webcampopuptext"><h3>' + popuplink +
                 '</h3><div><b>Provider:</b> <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a><br /><b>Source:</b> ' + webcam._Meta.Source + '<br /><br /></div></div>'
 
                 let popup = L.popup().setContent(popupbody);
