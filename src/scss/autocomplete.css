@@ -5,48 +5,80 @@
  */
 
 .autocomplete {
-    /*the container must be positioned relative:*/
-    position: relative;
-    display: inline-block;
-    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-  }
-  input {
-    border: 1px solid transparent;
-    background-color: #f1f1f1;
-    padding: 10px;
-    font-size: 14px;    
-  }
-  input[type=text] {
-    background-color: #f1f1f1;
-    width: 100%;
-  }
-  input[type=submit] {
-    background-color: DodgerBlue;
-    color: #fff;
-  }
-  .autocomplete-items {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    border-bottom: none;
-    border-top: none;
-    z-index: 50000;
-    /*position the autocomplete items to be the same width as the container:*/
-    top: 100%;
-    left: 0;
-    right: 0;
-  }
-  .autocomplete-items div {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #fff;
-    border-bottom: 1px solid #d4d4d4;
-  }
-  .autocomplete-items div:hover {
-    /*when hovering an item:*/
-    background-color: #e9e9e9;
-  }
-  .autocomplete-active {
-    /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important;
-    color: #ffffff;
-  }
+  /*the container must be positioned relative:*/
+  position: relative;
+}
+
+.autocomplete input[type=text] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border: 1px solid var(--wc-border);
+  border-radius: var(--wc-radius);
+  background-color: var(--wc-surface);
+  color: var(--wc-text);
+  font: inherit;
+  font-size: 15px;
+  box-shadow: var(--wc-shadow);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.autocomplete input[type=text]::placeholder {
+  color: var(--wc-text-muted);
+}
+
+.autocomplete input[type=text]:focus {
+  border-color: var(--wc-primary);
+  box-shadow: var(--wc-shadow), 0 0 0 3px color-mix(in srgb, var(--wc-primary) 22%, transparent);
+}
+
+.autocomplete-items {
+  position: absolute;
+  z-index: 50000;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid var(--wc-border);
+  border-radius: var(--wc-radius);
+  background-color: var(--wc-surface);
+  box-shadow: var(--wc-shadow-lg);
+}
+
+.autocomplete-items:empty {
+  display: none;
+}
+
+.autocomplete-items div {
+  padding: 10px 16px;
+  cursor: pointer;
+  color: var(--wc-text);
+  font-size: 14px;
+}
+
+.autocomplete-items div + div {
+  border-top: 1px solid var(--wc-surface-alt);
+}
+
+.autocomplete-items div strong {
+  color: var(--wc-primary);
+  font-weight: 600;
+}
+
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: var(--wc-primary-light);
+}
+
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: var(--wc-primary) !important;
+  color: #ffffff !important;
+}
+
+.autocomplete-active strong {
+  color: #ffffff !important;
+}

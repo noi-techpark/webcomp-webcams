@@ -6,21 +6,23 @@ SPDX-License-Identifier: CC0-1.0
 
 # Webcomponent Opendatahub Webcams 
 
-[![REUSE Compliance](https://github.com/noi-techpark/webcomp-boilerplate/actions/workflows/reuse.yml/badge.svg)](https://github.com/noi-techpark/odh-docs/wiki/REUSE#badges)
-[![REUSE status](https://api.reuse.software/badge/github.com/noi-techpark/webcomp-boilerplate)](https://api.reuse.software/info/github.com/noi-techpark/webcomp-boilerplate)
-[![CI/CD](https://github.com/noi-techpark/webcomp-boilerplate/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/webcomp-boilerplate/actions/workflows/main.yml)
+[![REUSE Compliance](https://github.com/noi-techpark/webcomp-webcams/actions/workflows/reuse.yml/badge.svg)](https://github.com/noi-techpark/odh-docs/wiki/REUSE#badges)
+[![REUSE status](https://api.reuse.software/badge/github.com/noi-techpark/webcomp-webcams)](https://api.reuse.software/info/github.com/noi-techpark/webcomp-webcams)
+[![CI/CD](https://github.com/noi-techpark/webcomp-webcams/actions/workflows/main.yml/badge.svg)](https://github.com/noi-techpark/webcomp-webcams/actions/workflows/main.yml)
 
 This webcomponent shows all available webcams from opendatahub which are provided with a valid GPS point on a simple map.
 
 - [Webcomponent Webcams](#webcomponent-opendatahub-webcams)
   - [Usage](#usage)
     - [Attributes](#attributes)
-      - [xxxx](#xxxx)
-      - [yyy](#yyy)
+      - [centermap](#centermap)
+      - [zoommap](#zoommap)
+      - [source](#source)
   - [Getting started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Source code](#source-code)
     - [Dependencies](#dependencies)
+    - [Environment](#environment)
     - [Build](#build)
   - [Tests and linting](#tests-and-linting)
   - [Deployment](#deployment)
@@ -42,27 +44,29 @@ This webcomponent shows all available webcams from opendatahub which are provide
 Include the webcomponent script file `dist/webcomp-webcams.min.js` in your HTML and define the web component like this:
 
 ```html
-<webcomp-webcams xxx="test" yyy="2"></webcomp-webcams>
+<webcomp-webcams centermap="46.641532,11.355583" zoommap="10" source="idm,lts,panomax"></webcomp-webcams>
+<script src="webcomp-webcams.min.js"></script>
 ```
 
 ### Attributes
 
 #### centermap
 
-Center map on latitude and longitude: ex. "46.7728692,10.7916716."  
+Center of the map as latitude and longitude, e.g. "46.7728692,10.7916716"  
 Type: string  
 Default: "46.7728692,10.7916716"
 
 #### zoommap
 
-Zoom level of the map example: 10
-Type: int
+Zoom level of the map, e.g. 10  
+Type: number  
 Default: 10
 
-#### TODO source
+#### source
 
-Sources of the webcams. Filter webcams based on a source. Multiselect, available values: "idm","lts","dss","panomax","panocloud","feratel","a22"
-Type: multiselect
+Comma-separated list of webcam sources to show. Available values: "idm", "lts", "dss", "panomax", "panocloud", "feratel", "a22"  
+Type: string (multiselect in the webcomponent store)  
+Default: all sources
 
 ## Getting started
 
@@ -73,23 +77,22 @@ on your local machine for development and testing purposes.
 
 To build the project, the following prerequisites must be met:
 
-- ToDo: Check the prerequisites
-- Node 12 / NPM 6
+- Node 20 / npm 10 (see `.nvmrc`, e.g. `nvm use`)
 
-For a ready to use Docker environment with all prerequisites already installed and prepared, you can check out the [Docker environment](#docker-environment) section.
+For a ready to use Docker environment with all prerequisites already installed and prepared, you can check out the [Run with docker](#run-with-docker) section.
 
 ### Source code
 
 Get a copy of the repository:
 
 ```bash
-ToDo: git clone https://github.com/noi-techpark/webcomp-webcams.git
+git clone https://github.com/noi-techpark/webcomp-webcams.git
 ```
 
 Change directory:
 
 ```bash
-ToDo: cd webcomp-webcams/
+cd webcomp-webcams/
 ```
 
 ### Dependencies
@@ -102,11 +105,17 @@ npm install
 
 ### Environment
 
-Copy .env.example to .env and set all needed Environment Variables.
+Copy `.env.example` to `.env` and adjust the variables if needed:
+
+```bash
+cp .env.example .env
+```
+
+`TOURISM_BASE_PATH` is the Open Data Hub Tourism API the webcomponent reads webcams and districts from. It is the only variable needed to run the webcomponent.
 
 ### Build
 
-Build and start the project:
+Start the development server (with live reload):
 
 ```bash
 npm run start
@@ -116,12 +125,7 @@ The application will be served and can be accessed at [http://localhost:8998](ht
 
 ## Tests and linting
 
-The tests and the linting can be executed with the following commands:
-
-```bash
-npm run test
-npm run lint
-```
+There are no test or lint scripts in this project. The CI pipeline (`.github/workflows/main.yml`) checks REUSE compliance, builds the webcomponent and runs the Open Data Hub webcomponent test action.
 
 ## Deployment
 
@@ -131,27 +135,37 @@ To create the distributable files, execute the following command:
 npm run build
 ```
 
+The bundle is written to `dist/webcomp-webcams.min.js`.
+
+Pushes to `main` are deployed to the test webcomponent store, tags starting with `v` (e.g. `v1.2.0`) to production. See `.github/workflows/main.yml`.
+
 ## Run with docker
 
 If you want to test the webcomponent on a local instance of the [webcomponent store](https://webcomponents.opendatahub.com/) to make sure that it will run correctly also on the real store.
 You can also access the webcomponent running in a simple separated docker container outside of the store.
 
-If you have already developed your webcomponent and now want to test it on a local instance of the store, just copy `.env.example`, `docker-compose.yml`, `wcs-manifest.json` and `infrastructure/docker` into your root folder. Adjust your `package.json` and `wcs-manifest.json` files as described on the top of this readme. Then follow the instructions below.
+The `app` container (Node 20) runs the webpack dev server with `public/index.html` on port `APP_PORT` (default 8998). It only needs the `.env` file from the [Environment](#environment) section:
 
-For accessing the webcomponent in a separated docker in the browser you will need a server (e.g. webpack dev-server) that is hosting a page which includes the webcomponent tag, as well as the script defining it. This page needs to be hosted on port 8080 as specified in your docker-compose file.
+```bash
+docker compose up app
+```
+
+The other containers run a local copy of the webcomponent store on port `FRONTEND_PORT` (default 8999). They need additional variables (ports, `WC_VERSION`, Keycloak and database settings) that are not part of this project's `.env.example`. Copy them into your `.env` from the [boilerplate `.env.example`](https://github.com/noi-techpark/webcomp-boilerplate/blob/main/.env.example).
 
 ### Installation
 
 Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally on your machine.
 
 ### Start the docker containers
-- Create a .env file: <br>
+- Create a .env file and add the store variables from the [boilerplate `.env.example`](https://github.com/noi-techpark/webcomp-boilerplate/blob/main/.env.example): <br>
   `cp .env.example .env`
 - [Optional] Adjust port numbers in .env if they have conflicts with services already running on your machine
+- Build the webcomponent, so the store can pick up the `dist` folder: <br>
+  `npm run build`
 - Start the store with: <br>
-  `docker-compose up -d`
+  `docker compose up -d`
 - Wait until the containers are running. You can check the current state with: <br>
-  `docker-compose logs --tail 500 -f`
+  `docker compose logs --tail 500 -f`
 - Access the store in your browser on: <br>
   `localhost:8999`
 - Access webcomponent running in separated docker in your browser on: <br>
@@ -159,14 +173,14 @@ Install [Docker](https://docs.docker.com/install/) (with Docker Compose) locally
 
 ### Publish a new version of your webcomponent
 - Increase version number WC_VERSION in your .env file
-- Then run: `docker-compose up wcstore-cli`
+- Then run: `docker compose up wcstore-cli`
 
 ### Stop the docker containers
-- `docker-compose stop`
+- `docker compose stop`
 
 ### Delete your webcomponents from the store
-- `[sudo] rm -f workspace`
-- `docker-compose rm -f -v postgres`
+- `[sudo] rm -rf workspace`
+- `docker compose rm -f -v postgres`
 
 
 ## Information

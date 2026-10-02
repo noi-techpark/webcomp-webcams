@@ -4,15 +4,18 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-$black: #333;
-$white: #fff;
-$blue: #4285f4;
-$red: #e6040e;
-$orange: #de7000;
-$green: #97be0e;
-$black-400: #6f6f6f;
-$black-300: #88898b;
-$black-200: #cccccc;
-$black-100: #e2e2e2;
-$black-50: #f0f1f1;
-$black-10: #fafafa;
+// Palette: emerald green primary, amber accent, slate neutrals.
+// Exposed as CSS custom properties on :host (see main.scss) so the
+// embedding page can re-theme the component, e.g.
+//   webcomp-webcams { --wc-primary: #c2185b; }
+
+$primary: #047857;
+$primary-dark: #064e3b;
+$primary-light: #ecfdf5;
+$accent: #f59e0b;
+
+$text: #1e293b;
+$text-muted: #64748b;
+$surface: #ffffff;
+$surface-alt: #f8fafc;
+$border: #e2e8f0;

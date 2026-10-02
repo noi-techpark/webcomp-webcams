@@ -13,6 +13,18 @@ import { autocomplete } from './custom/autocomplete.js'
 
 //delete L.Icon.Default.prototype._getIconUrl;
 
+// Map pin (viewBox 0 0 32 42) filled with currentColor, plus a white glyph
+const PIN_PATH = 'M16 0C7.2 0 0 7 0 15.7c0 11.2 14.1 25 15 25.9a1.4 1.4 0 0 0 2 0C17.9 40.7 32 26.9 32 15.7 32 7 24.8 0 16 0z';
+const webcamPinSvg = '<svg viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg"><path d="' + PIN_PATH + '" fill="currentColor"/>' +
+    '<rect x="7.5" y="10.5" width="12" height="10" rx="2" fill="#fff"/><path d="M20.5 14.2l4-2.7v8l-4-2.7z" fill="#fff"/></svg>';
+const searchPinSvg = '<svg viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg"><path d="' + PIN_PATH + '" fill="currentColor"/>' +
+    '<circle cx="16" cy="15.5" r="5.5" fill="#fff"/></svg>';
+const searchIconSvg = '<svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
 class OpendatahubWebcams extends HTMLElement {
     constructor() {
         super();         
@@ -110,6 +122,8 @@ class OpendatahubWebcams extends HTMLElement {
         L.tileLayer(this.map_layer, {
           attribution: this.map_attribution
         }).addTo(this.map);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(this.map);
     }
 
     //Api call
@@ -147,8 +161,9 @@ class OpendatahubWebcams extends HTMLElement {
                     // });            
                     
                     let markericon = L.divIcon({
-                        html: '<div class="marker-pointer"><span class="iconMarkerMap"></span></div>',                        
-                        iconSize: L.point(22, 40)
+                        html: '<div class="search-marker">' + searchPinSvg + '</div>',
+                        iconSize: L.point(32, 42),
+                        iconAnchor: L.point(16, 42)
                       });
 
                     //var newMarker = new L.marker(newgps, { icon: markericon }).addTo(mymap);
@@ -184,12 +199,13 @@ class OpendatahubWebcams extends HTMLElement {
                     imageurl = webcam.ImageGallery[0].ImageUrl;
 
 
-                const webcamhtml = '<img class="webcampreview" src="' + imageurl + '" title="' + webcamname + '">'
+                const webcamhtml = '<img class="webcampreview" src="' + escapeHtml(imageurl) + '" alt="' + escapeHtml(webcamname) + '" loading="lazy">'
 
                 let icon = L.divIcon({
-                    //html: '<div class="marker">' + webcamhtml + '</div>',
-                    html: '<div class="iconMarkerWebcam"></div>',
-                    iconSize: L.point(100, 100)
+                    html: '<div class="webcam-marker">' + webcamPinSvg + '</div>',
+                    iconSize: L.point(32, 42),
+                    iconAnchor: L.point(16, 42),
+                    popupAnchor: L.point(0, -40)
                 });
             
                 //   let popupCont = '<div class="popup"><b>' + webcam.Shortname + '</b><br /><i>' + webcam.Id + '</i>';
@@ -221,20 +237,27 @@ class OpendatahubWebcams extends HTMLElement {
                 if(webcam.WebCamProperties.WebcamUrl)
                     webcamurl = webcam.WebCamProperties.WebcamUrl;
             
-                const popuplink = webcamurl != '' ? '<a href="' + webcamurl + '" target="_blank">' + webcamname + '</a><br />' : '<div>' + webcamname + '<div>';
-                const popupimage = webcamurl != '' ? '<a href="' + webcamurl + '" target="_blank">' + webcamhtml + '</a>' : '<div>' + webcamhtml + '<div>';
-                const popupbody = '<div class="webcampopup">' + popupimage + '</div><div class="webcampopuptext"><h3>' + popuplink +
-                '</h3><div><b>Provider:</b> <a href="' + webcam.LicenseInfo.LicenseHolder + '" target="_blank">' + webcam.LicenseInfo.LicenseHolder + '</a><br /><b>Source:</b> ' + webcam._Meta.Source + '<br /><br /></div></div>'
+                const licenseholder = escapeHtml(webcam.LicenseInfo.LicenseHolder || '-');
+                const source = escapeHtml(webcam._Meta.Source || '');
+                const badge = source != '' ? '<span class="webcampopup__badge">' + source + '</span>' : '';
+                const popupimage = webcamurl != ''
+                    ? '<a class="webcampopup" href="' + escapeHtml(webcamurl) + '" target="_blank" rel="noopener">' + webcamhtml + badge + '</a>'
+                    : '<div class="webcampopup">' + webcamhtml + badge + '</div>';
+                const popupcta = webcamurl != ''
+                    ? '<a class="webcampopup__cta" href="' + escapeHtml(webcamurl) + '" target="_blank" rel="noopener">Open webcam &rarr;</a>'
+                    : '';
+                const popupbody = popupimage + '<div class="webcampopuptext"><h3>' + escapeHtml(webcamname) + '</h3>' +
+                    '<dl><dt>Provider</dt><dd><a href="' + licenseholder + '" target="_blank" rel="noopener">' + licenseholder + '</a></dd>' +
+                    '<dt>Source</dt><dd>' + source + '</dd></dl>' + popupcta + '</div>';
 
                 let popup = L.popup().setContent(popupbody);
             
                 // specify popup options 
                 var customOptions =
                     {
-                    'minWidth': '350',
-                    'maxWidth': '450',
-                    'border-radius': '0.75em',
-                    'padding': '0px'
+                    'minWidth': 300,
+                    'maxWidth': 340,
+                    'className': 'webcam-popup'
                     }
 
                 let marker = L.marker(pos, {
@@ -253,9 +276,11 @@ class OpendatahubWebcams extends HTMLElement {
           showCoverageOnHover: false,
           chunkedLoading: true,
           iconCreateFunction: function(cluster) {
+            const count = cluster.getChildCount();
+            const size = count < 10 ? 34 : count < 100 ? 42 : 50;
             return L.divIcon({
-              html: '<div class="marker_cluster__marker">' + cluster.getChildCount() + '</div>',
-              iconSize: L.point(100, 100)
+              html: '<div class="marker-cluster">' + count + '</div>',
+              iconSize: L.point(size, size)
             });
           }
         });
@@ -281,7 +306,7 @@ class OpendatahubWebcams extends HTMLElement {
                 ${style}
             </style>     
             <div id="webcomponents-map"> 
-                <div class="autocomplete" style="width:300px;"><input id="searchInput" type="text" name="myCountry" placeholder="Country"></div>
+                <div class="autocomplete search">${searchIconSvg}<input id="searchInput" type="text" name="searchLocation" placeholder="Search a town or area…" autocomplete="off"></div>
                 <input id="searchHidden" type="hidden">     
                 <div id="map" class="map"></div>
             </div>
